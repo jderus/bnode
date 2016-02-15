@@ -1,7 +1,12 @@
 var http = require("http");
 
-http.createServer(function(request,response) {
+function onRequest(request,response) {
+  //Note: might see 2 requests on browser load due to favicon request.
+  console.log("Request received");
   response.writeHead(200, {"Content-Type": "text/plain"});
   response.write("Hello Node Server");
   response.end();
-}).listen(8888);
+}
+
+http.createServer(onRequest).listen(8888);
+console.log("server has started...");
