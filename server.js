@@ -7,11 +7,7 @@ function start(route, handle) {
     //Note: might see 2 requests on browser load due to favicon request.
     console.log("Request received for: " + pathname);
 
-    route(handle, pathname);
-
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write("Hello Node Server");
-    response.end();
+    route(handle, pathname, response);
   }
   http.createServer(onRequest).listen(8888);
   console.log("server has started...");
