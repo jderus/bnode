@@ -1,5 +1,6 @@
 var server = require('net').createServer();
 var port = 4242;
+var timeout = 30000;
 
 server.on('listening', function(){
    console.log('Server is listening on port', port); 
@@ -9,6 +10,7 @@ server.on('connection', function(socket) {
    console.log('Server has a new connection');
    
    socket.setEncoding('utf8');
+   socket.setTimeout(timeout);
    socket.write("Yo. Start typing. 'quit' shuts me up.");
    
    socket.on('data', function(data){
@@ -19,6 +21,10 @@ server.on('connection', function(socket) {
       }
       
       socket.write(data);
+   });
+   
+   socket.on('timeout', function(){
+      socket.end('idle itmeout. disco.'); 
    });
    
    socket.on('end', function(){
