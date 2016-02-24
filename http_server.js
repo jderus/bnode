@@ -20,7 +20,7 @@
 //    rs.pipe(res);
 // }).listen(4000);
 
-// Pipe out from a child proc
+// Pipe out from a child proc seems to have problems too.
 var spawn = require('child_process').spawn;
  
  require('http').createServer(function(req,res){
