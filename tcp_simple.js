@@ -38,16 +38,28 @@
 //     process.stdin.pipe(conn);
 // }());
 
-
+// Being dumb. Run the server tcp_proto first. :(
 var net = require('net');
-var PORT = 5000;
+var PORT = 4242;
 var conn;
 
+var quitting = false;
 var retryInterval = 3000;
 var retriedTimes = 0;
 var maxRetries = 5;
 
 process.stdin.resume();
+process.stdin.on('data', function(data){
+    if (data.toString().trim().toLowerCase() === 'quit') {
+        quitting = true;
+        console.log('quitting ...');
+        conn.end();
+        process.stdin.pause();
+    } else {
+        conn.write(data);
+    }
+});
+
 
 (function connect() {
     function reconnect() {
@@ -57,7 +69,7 @@ process.stdin.resume();
         retriedTimes += 1;
         setTimeout(connect, retryInterval);
     }
-    
+        
     conn = net.createConnection(PORT);
     
     conn.on('connect', function() {
@@ -70,10 +82,11 @@ process.stdin.resume();
     });
     
     conn.on('close', function() {
-       console.log('Connection Closed, attempt reconnect');
-       reconnect(); 
+        if (! quitting) {
+            console.log('Connection Closed, attempt reconnect');
+            reconnect(); 
+        }
     });
     
-    // conn.pipe(process.stdout, {end: false});
-    process.stdin.pipe(conn, {end:false});
+    conn.pipe(process.stdout, {end: false});
 }());
