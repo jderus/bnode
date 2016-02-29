@@ -18,8 +18,8 @@
 var request = require('request');
 var inspect = require('util').inspect;
 
-request(
-    'http://localhost:4400/redirect',
+request.post(
+    'http://localhost:4400/abc/def',
     function(err,res,body){
         if(err) { throw err; }
         console.log(inspect({
